@@ -9,3 +9,10 @@ block content
         label.sr-only(for="inlineFormInputName2") 输入发送信息
         input#message.form-control.mb-2(type="text", placeholder="在此输入发送信息的内容")
         button#send.btn.btn-primary.mb-2(type="submit") 发送
+  section#nameform.modal
+    div.backdrop
+    div.popup
+      div.pophead Please enter a nickname
+      div.popbody
+        input#nickname(type='text')
+        input#setname(type='button', value='Set Name')
