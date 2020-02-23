@@ -1,18 +1,6 @@
 extends layout
 
 block content
-  section#chatroom
-    div#messages
-
-    div#message-editter
-      form.form-inline(action='javascript:;')
-        label.sr-only(for="inlineFormInputName2") 输入发送信息
-        input#message.form-control.mb-2(type="text", placeholder="在此输入发送信息的内容")
-        button#send.btn.btn-primary.mb-2(type="submit") 发送
-  section#nameform.modal-ws
-    div.backdrop
-    div.popup
-      div.pophead Please enter a nickname
-      div.popbody
-        input#nickname(type='text')
-        input#setname(type='button', value='Set Name')
+  section#welcome
+    div Welcome
+    a#startchat(type="button", class="btn", href="/chatroom") 开始聊天

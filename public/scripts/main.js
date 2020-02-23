@@ -7,7 +7,7 @@ requirejs.config({
   }
 })
 
-if (window.location.pathname === '/') {
+if (window.location.pathname === '/chatroom') {
   requirejs(['indexPage'], function(undefined) {})
 }
 
