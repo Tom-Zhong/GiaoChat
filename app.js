@@ -7,7 +7,7 @@ import cors from './plugin/cors'
 import './plugin/mongodb'
 var indexRouter = require('./routes/index');
 const v1 = require('./routes/v1/index')
-
+import { initializeSocketIO } from './plugin/socketIO'
 var app = express();
 
 // view engine setup
@@ -20,6 +20,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(cors)
+app.socket = initializeSocketIO;
 
 app.use('/', indexRouter);
 app.use('/v1', v1)
