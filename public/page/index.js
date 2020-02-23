@@ -19,6 +19,7 @@ requirejs(['io', 'jquery'], function(io, $) {
 
     $('#setname').click(function() {
       socket.emit('set_name', { name: $('#nickname').val() })
+      $('#nameform').css('display', 'none')
     })
   })
 })

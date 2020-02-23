@@ -23,6 +23,7 @@ div#messages {
   -moz-box-sizing: border-box;
   -webkit-box-sizing: border-box;
   box-sizing: border-box;
+  overflow: scroll;
 }
 
 input#message {
@@ -60,8 +61,7 @@ a {
   color: #00b7ff;
 }
 
-//EXISTING CSS
-.modal {
+.modal-ws {
   -moz-box-sizing: border-box;
   -webkit-box-sizing: border-box;
   box-sizing: border-box;
