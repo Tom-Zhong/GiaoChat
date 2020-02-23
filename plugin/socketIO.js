@@ -42,6 +42,19 @@ const initializeSocketIO = function(server) {
           JSON.stringify({ name: socket.nickname, type: 'systemMessage' })
         )
     })
+
+    socket.on('get_rooms', function() {
+      var rooms = {}
+      // console.log( this.adapter.rooms)
+      for (var room in this.adapter.rooms) {
+        if (room.indexOf('/chat_infra') == -1) {
+          var roomName = room.replace('/chat_infra/', '')
+          rooms[roomName] = this.adapter.rooms[room].length
+          console.log(rooms)
+        }
+      }
+      socket.emit('rooms_list', rooms)
+    })
   })
 
   this.chatCom = ioInstance.of('/chat_com')

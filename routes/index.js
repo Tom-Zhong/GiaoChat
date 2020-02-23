@@ -10,6 +10,9 @@ router.get('/chatroom', function(req, res, next) {
   res.render('chatroom', { title: 'chat_room' });
 });
 
+router.get('/rooms', function(req, res, next) {
+  res.render('rooms', { title: 'rooms' });
+});
 router.get('/about', function(req, res, next) {
   res.render('about', { title: 'about' });
 });
