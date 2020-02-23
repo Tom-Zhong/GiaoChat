@@ -1,22 +1,25 @@
 import io from 'socket.io'
 import http from 'http'
 
-const initializeSocketIO = server => {
+const initializeSocketIO = function(server) {
   const ioInstance = io(server)
-  ioInstance.sockets.on('connection', socket => {
+  const _self = this
+
+  this.chatInfra = ioInstance.of('/chat_infra')
+  this.chatInfra.on('connection', function(socket) {
     socket.on('message', function(message) {
       message = JSON.parse(message)
       message.message = (socket.name || '无名氏') + ': ' + message.message
 
-      if (message.type == 'userMessage') {
-        socket.broadcast.send(JSON.stringify(message))
-        message.type = 'myMessage'
-        socket.send(JSON.stringify(message))
-      }
+      // if (message.type == 'userMessage') {
+      //   socket.broadcast.send(JSON.stringify(message))
+      //   message.type = 'myMessage'
+      //   socket.send(JSON.stringify(message))
+      // }
     })
 
     socket.on('set_name', function(data) {
-      socket.name = data.name
+      socket.nickname = data.name
 
       socket.emit('name_set', data)
       socket.send(
@@ -25,6 +28,31 @@ const initializeSocketIO = server => {
           message: `${data.name}, 欢迎来到Giao聊天！`
         })
       )
+    })
+
+    socket.on('join_room', function(room) {
+      socket.join(room.name)
+      const comSocket = _self.chatCom.sockets['/chat_com#' + socket.conn.id] // 这里使用拼接的手段获取同一个socket
+      comSocket.join(room.name)
+      comSocket.room = room.name
+      socket
+        .in(room.name)
+        .broadcast.emit(
+          'user_entered',
+          JSON.stringify({ name: socket.nickname, type: 'systemMessage' })
+        )
+    })
+  })
+
+  this.chatCom = ioInstance.of('/chat_com')
+  this.chatCom.on('connection', function(socket) {
+    socket.on('message', function(message) {
+      message = JSON.parse(message)
+      if (message.type == 'userMessage') {
+        socket.in(socket.room).broadcast.send(JSON.stringify(message))
+        message.type = 'myMessage'
+        socket.send(JSON.stringify(message))
+      }
     })
   })
 }
