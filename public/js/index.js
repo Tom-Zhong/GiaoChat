@@ -1,0 +1,1 @@
+console.log("当前使用jquery版本: ", $.fn.jquery);
