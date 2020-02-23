@@ -1,0 +1,61 @@
+html {
+  height: 100%;
+}
+
+body {
+  height: -moz-calc(100% - 20px);
+  height: -webkit-calc(100% - 20px);
+  height: calc(100% - 20px);
+}
+
+section#chatroom {
+  height: -moz-calc(100% - 100px);
+  height: -webkit-calc(100% - 100px);
+  height: calc(100% - 100px);
+  background-color: #efffec;
+}
+
+div#messages {
+  height: -moz-calc(100% - 35px);
+  height: -webkit-calc(100% - 35px);
+  height: calc(100% - 35px);
+  padding: 10px;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+input#message {
+  width: 80%;
+}
+
+button#send {
+  width: 20%;
+}
+
+header {
+  background-color: #4192c1;
+  text-align: right;
+}
+
+header h1 {
+  padding: 5px;
+  padding-right: 15px;
+  color: #ffffff;
+  margin: 0px;
+}
+
+footer {
+  padding: 6px;
+  background-color: #4192c1;
+  color: #ffffff;
+  bottom: 0;
+  position: absolute;
+  width: 100%;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+}
+a {
+  color: #00b7ff;
+}
