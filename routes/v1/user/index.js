@@ -6,7 +6,7 @@ import jwt from 'jsonwebtoken'
 import checkAuth from '../../../plugin/check-auth'
 const user = Router()
 
-user.get('/', checkAuth, function (req, res, next) {
+user.get('/', function (req, res, next) {
   User.find().exec().then(docs => {
     // console.log(docs)
     const response = {
@@ -16,6 +16,7 @@ user.get('/', checkAuth, function (req, res, next) {
           name: doc.name,
           age: doc.age,
           _id: doc._id,
+          doc: doc,
           request: {
             type: "GET",
             url: "http://localhost:3000/v1/user/" + doc._id
@@ -102,6 +103,7 @@ user.post('/signup', function (req, res, next) {
 user.post('/login', (req, res, next) => {
   let email = req.body.email
   let pwd = req.body.pwd
+  console.log(email, pwd);
   User.find({ email: email })
     .exec()
     .then(userInfo => {

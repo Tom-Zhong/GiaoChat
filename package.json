@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "dev": "cross-env NODE_ENV=development nodemon ./bin/www --exec babel-node --presets babel-preset-env ",
+    "dev": "cross-env NODE_ENV=development nodemon ./bin/www --exec babel-node",
     "start": "nodemon --exec babel-node ./bin/www ",
     "debug": "DEBUG=giaochat:* npm start"
   },
