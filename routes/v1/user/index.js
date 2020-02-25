@@ -13,7 +13,7 @@ user.get('/', function(req, res, next) {
       // console.log(docs)
       const response = {
         count: docs.length,
-        products: docs.map(doc => {
+        usersArr: docs.map(doc => {
           return {
             name: doc.name,
             age: doc.age,

@@ -1,7 +1,7 @@
 import mongoose from 'mongoose'
 
 // 聊天信息表，即每一条聊天记录
-const RoomsSchema = mongoose.Schema(
+const MessageScheme = mongoose.Schema(
   {
     id: mongoose.Schema.Types.ObjectId,                                // 消息ID
     creatorId: {                                                       // 创建者的ID
@@ -42,4 +42,4 @@ const RoomsSchema = mongoose.Schema(
   }
 )
 
-export default mongoose.model('Rooms', RoomsSchema)
+export default mongoose.model('Rooms', MessageScheme)
