@@ -133,6 +133,7 @@ user.post('/login', (req, res, next) => {
             })
           return res.status(200).json({
             token: token,
+            createTime:  Date.now(),
             message: 'Auth successful'
           })
         }

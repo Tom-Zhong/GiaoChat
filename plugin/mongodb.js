@@ -1,10 +1,9 @@
-import mongoose from 'mongoose'
+import mongoose from 'mongoose';
 
-mongoose.connect(
-	'mongodb+srv://root:1234@cluster0-mtpng.mongodb.net/test?retryWrites=true&w=majority',
-	{
-		useNewUrlParser: true,
-		useUnifiedTopology: true,
-	}
-)
-mongoose.set('useCreateIndex', true)
+mongoose.connect('mongodb://localhost/zguiyong', {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+  useFindAndModify: false,
+  useCreateIndex: true
+});
+mongoose.set('useCreateIndex', true);
