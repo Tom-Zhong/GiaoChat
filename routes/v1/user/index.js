@@ -6,37 +6,39 @@ import jwt from 'jsonwebtoken'
 import checkAuth from '../../../plugin/check-auth'
 const user = Router()
 
-user.get('/', function (req, res, next) {
-  User.find().exec().then(docs => {
-    // console.log(docs)
-    const response = {
-      count: docs.length,
-      products: docs.map(doc => {
-        return {
-          name: doc.name,
-          age: doc.age,
-          _id: doc._id,
-          doc: doc,
-          request: {
-            type: "GET",
-            url: "http://localhost:3000/v1/user/" + doc._id
+user.get('/', function(req, res, next) {
+  User.find()
+    .exec()
+    .then(docs => {
+      // console.log(docs)
+      const response = {
+        count: docs.length,
+        products: docs.map(doc => {
+          return {
+            name: doc.name,
+            age: doc.age,
+            _id: doc._id,
+            doc: doc,
+            request: {
+              type: 'GET',
+              url: 'http://localhost:3000/v1/user/' + doc._id
+            }
           }
-        }
-      })
-    }
-    res.status(200).json(response)
-  }).catch(err => {
-    console.log(err)
-    res.status(500).json({
-      error: err
+        })
+      }
+      res.status(200).json(response)
     })
-  })
+    .catch(err => {
+      console.log(err)
+      res.status(500).json({
+        error: err
+      })
+    })
 })
-user.get('/:id', checkAuth, function (req, res, next) {
+user.get('/:id', checkAuth, function(req, res, next) {
   let id = req.params.id
   console.log(id)
-  User
-    .findById(id)
+  User.findById(id)
     .select('name age')
     .exec()
     .then(result => {
@@ -47,14 +49,15 @@ user.get('/:id', checkAuth, function (req, res, next) {
         age: result.age
       }
       res.status(200).json(response)
-    }).catch(err => {
+    })
+    .catch(err => {
       console.log(err)
       res.status(500).json({
         error: err
       })
     })
 })
-user.post('/signup', function (req, res, next) {
+user.post('/signup', function(req, res, next) {
   let name = req.body.name
   let age = req.body.age
   let email = req.body.email
@@ -83,18 +86,21 @@ user.post('/signup', function (req, res, next) {
               pwd: hash
             })
 
-            user.save().then(result => {
-              console.log(result)
-              res.status(201).json({
-                message: 'Handling Create User',
-                createUser: result
+            user
+              .save()
+              .then(result => {
+                console.log(result)
+                res.status(201).json({
+                  message: 'Handling Create User',
+                  createUser: result
+                })
               })
-            }).catch(err => {
-              console.log(err)
-              res.status(500).json({
-                error: err
+              .catch(err => {
+                console.log(err)
+                res.status(500).json({
+                  error: err
+                })
               })
-            })
           }
         })
       }
@@ -103,7 +109,7 @@ user.post('/signup', function (req, res, next) {
 user.post('/login', (req, res, next) => {
   let email = req.body.email
   let pwd = req.body.pwd
-  console.log(email, pwd);
+  console.log(email, pwd)
   User.find({ email: email })
     .exec()
     .then(userInfo => {
@@ -121,7 +127,6 @@ user.post('/login', (req, res, next) => {
         }
 
         if (result) {
-
           const token = jwt.sign(
             {
               email: userInfo[0].email,
@@ -130,10 +135,11 @@ user.post('/login', (req, res, next) => {
             process.env.JWT_KEY,
             {
               expiresIn: '1h'
-            })
+            }
+          )
           return res.status(200).json({
             token: token,
-            createTime:  Date.now(),
+            createTime: Date.now(),
             message: 'Auth successful'
           })
         }
