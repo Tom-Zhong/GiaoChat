@@ -9,8 +9,6 @@ const MessageScheme = mongoose.Schema(
       ref: 'User',
       required: true
     },
-    creatorName: { type: String, required: true },                     // 创建者昵称
-    creatorEmail: { type: String, required: true },                    // 创建者邮箱
     content: { type: String, required: true },                         // 消息内容
     from: {                                                            // 发送者的ID
       type: mongoose.Schema.Types.ObjectId,
