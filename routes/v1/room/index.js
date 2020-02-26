@@ -17,9 +17,9 @@ room.get('/:id', async (req, res, next) => {
   try {
     // 获取用户为创建人或者参与者的聊天列表
     let returnRes = [];
-    const ownerResult = await Room.find({ ownerId, type: {$eq: 0}, member: {$ne: ownerId } }) // 自己创建私聊的列表
-    const privateChatRes = await Room.find({ member: { $eq: ownerId }, type: { $eq: 0 }, ownerId: { $ne: ownerId } } ) // 自己是成员的私聊
-    const memberResult = await Room.find({ member: {$eq: ownerId }, type: {$eq: 1} } ) // 群聊列表
+    const ownerResult = await Room.find({ ownerId, type: {$eq: 0}, member: {$ne: ownerId } }).select('-_id -creatorId -ownerId -createTime -updatedAt -allMembers') // 自己创建私聊的列表
+    const privateChatRes = await Room.find({ member: { $eq: ownerId }, type: { $eq: 0 }, ownerId: { $ne: ownerId } } ).select('-_id -creatorId -ownerId -createTime -updatedAt -allMembers') // 自己是成员的私聊
+    const memberResult = await Room.find({ member: {$eq: ownerId }, type: {$eq: 1} } ).select('-_id -creatorId -ownerId -createTime -updatedAt -allMembers') // 群聊列表
     returnRes = ownerResult.concat(memberResult || [])
     returnRes = returnRes.concat(privateChatRes || [])
     res.json({
