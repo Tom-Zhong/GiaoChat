@@ -7,22 +7,28 @@ import { map } from 'lodash'
 
 // 通过用户ID获取房间列表
 room.get('/:id', async (req, res, next) => {
-  const { id: member = 0 } = req.params
-  if (!member) {
+  const { id: ownerId = 0 } = req.params
+  if (!ownerId) {
     return res.status(400).json({
       code: -1,
       message: '请提供正确的参数'
     })
   }
   try {
-    // 通过拥有者ID查询好友列表的资料，使用populate来填充用户信息
-    const result = await Room.find({ member })
+    // 获取用户为创建人或者参与者的聊天列表
+    let returnRes = [];
+    const ownerResult = await Room.find({ ownerId, type: {$eq: 0}, member: {$ne: ownerId } }) // 自己创建私聊的列表
+    const privateChatRes = await Room.find({ member: { $eq: ownerId }, type: { $eq: 0 }, ownerId: { $ne: ownerId } } ) // 自己是成员的私聊
+    const memberResult = await Room.find({ member: {$eq: ownerId }, type: {$eq: 1} } ) // 群聊列表
+    returnRes = ownerResult.concat(memberResult || [])
+    returnRes = returnRes.concat(privateChatRes || [])
     res.json({
       code: 0,
       status: 200,
-      roomsArr: result
+      roomList: returnRes,
     })
   } catch (error) {
+    console.log(error)
     res.json({
       code: -1,
       message: '服务器炸了'
@@ -48,6 +54,11 @@ room.post('/:id', async (req, res, next) => {
     ownerId = creatorId
   }
 
+  // 如果成员超过1个人，自动升级为群聊
+  if (members.length >= 3) {
+    type = 1
+  }
+
   let faildCreateList = []
   let successCrateList = []
 
@@ -62,7 +73,8 @@ room.post('/:id', async (req, res, next) => {
         title,
         desc,
         member,
-        type
+        type,
+        allMembers: members,
       })
       const result = await room.save()
       successCrateList.push(result)
