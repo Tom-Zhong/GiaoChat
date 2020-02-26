@@ -7,12 +7,12 @@ const RoomsSchema = mongoose.Schema(
     creatorId: {                                                       // 创建者的ID
       type: mongoose.Schema.Types.ObjectId,
       ref: 'User',
-      required: true
+      required: true,
     },
     ownerId: {                                                         // 房间所有人
       type: mongoose.Schema.Types.ObjectId,
       ref: 'User',
-      required: true
+      required: true,
     },
     title: { type: String, required: true },                           // 房间名称
     desc: { type: String },                                            // 房间描述
