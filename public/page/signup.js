@@ -27,6 +27,7 @@ requirejs(['axios', 'jquery', 'popper', 'bootstrap'], function(axios, $) {
         console.log(res)
         localStorage.setItem('token', data.token)
         localStorage.setItem('tokenExpireTime', data.createTime)
+        localStorage.setItem('uid', data.id)
         UIComponents.resultText.html('登陆成功')
         UIComponents.signupModal.modal('show')
       })

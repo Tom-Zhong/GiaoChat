@@ -8,6 +8,7 @@ requirejs.config({
     indexPage: '../page/index',
     roomPage: '../page/room',
     signupPage: '../page/signup',
+    mainPage: '../page/main',
     axios: 'https://cdn.bootcss.com/axios/0.19.2/axios.min'
   }
 })
@@ -23,4 +24,8 @@ if (window.location.pathname === '/rooms') {
 
 if (window.location.pathname === '/signup') {
   requirejs(['signupPage'], function(undefined) {})
+}
+
+if (window.location.pathname === '/main') {
+  requirejs(['mainPage'], function(undefined) {})
 }

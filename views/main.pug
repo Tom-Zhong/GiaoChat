@@ -1,0 +1,17 @@
+extends layout
+
+
+block content
+  ul(class="nav nav-tabs", id="myTab",role="tablist")
+    li(class="nav-item")
+      a(class="nav-link active", id="home-tab", data-toggle="tab", href="#home", role="tab", aria-controls="home", aria-selected="true") Home
+    li(class="nav-item")
+      a(class="nav-link", id="profile-tab", data-toggle="tab", href="#profile", role="tab", aria-controls="profile", aria-selected="false") Profile
+    li(class="nav-item")
+      a(class="nav-link", id="contact-tab", data-toggle="tab", href="#contact", role="tab", aria-controls="contact", aria-selected="false") Home
+  div(class="tab-content" id="myTabContent")
+    div(class="tab-pane fade show active", id="home", role="tabpanel", ria-labelledby="home-tab")
+      ul(class="list-group rooms-list")
+        li(class="list-group-item") 获取聊天列表失败
+    div(class="tab-pane fade show", id="profile", role="tabpanel", ria-labelledby="profile-tab") hahha
+    div(class="tab-pane fade show", id="contact", role="tabpanel", ria-labelledby="contact-tab") yosousdaf
