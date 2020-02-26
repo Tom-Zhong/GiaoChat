@@ -1,5 +1,6 @@
 import io from 'socket.io'
 import http from 'http'
+import jwt from 'jsonwebtoken'
 
 const initializeSocketIO = function(server) {
   const ioInstance = io(server)
@@ -56,16 +57,21 @@ const initializeSocketIO = function(server) {
       socket.emit('rooms_list', rooms)
     })
   })
-
+  const userAndSocketidMap = {};
   this.chatCom = ioInstance.of('/chat_com')
   this.chatCom.on('connection', function(socket) {
     socket.on('message', function(message) {
+
+      // 从token里面解析出用户的id，利用id绑定相应的socket，方便实时发送信息
       message = JSON.parse(message)
-      if (message.type == 'userMessage') {
-        socket.in(socket.room).broadcast.send(JSON.stringify(message))
-        message.type = 'myMessage'
-        socket.send(JSON.stringify(message))
-      }
+      const { sender: token = '' } = message;
+      const decodedData = jwt.verify(token, process.env.JWT_KEY)
+      const { email, userId } = decodedData
+      socket.email = email
+      socket.userId = userId
+      userAndSocketidMap[userId] = socket.id
+
+      socket.in(userAndSocketidMap['5e55f66b2456b510809e61b9']).emit('message', '测试数据');
     })
   })
 }

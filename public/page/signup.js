@@ -25,6 +25,8 @@ requirejs(['axios', 'jquery', 'popper', 'bootstrap'], function(axios, $) {
       axios.post('/v1/user/login', form).then(res => {
         const { data, status } = res
         console.log(res)
+        localStorage.setItem('token', data.token)
+        localStorage.setItem('tokenExpireTime', data.createTime)
         UIComponents.resultText.html('登陆成功')
         UIComponents.signupModal.modal('show')
       })
