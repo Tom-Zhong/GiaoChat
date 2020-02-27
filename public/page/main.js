@@ -1,6 +1,7 @@
 requirejs(['axios', 'jquery', 'io', 'popper', 'bootstrap'], function(axios, $, io) {
   const UIComponents = {
-    roomsList: $('.rooms-list')
+    roomsList: $('.rooms-list'),
+    textBox: $('#message')
   }
   const chatCom = io.connect('/chat_com')
 
@@ -35,7 +36,7 @@ requirejs(['axios', 'jquery', 'io', 'popper', 'bootstrap'], function(axios, $, i
       const roomsId = e.target.dataset.id
       const data = {
         type: 'chatMessage',
-        message: Math.random() + 'hahah',
+        message: UIComponents.textBox.val(),
         receiver: roomsId,
       }
       chatCom.send(JSON.stringify(data))
