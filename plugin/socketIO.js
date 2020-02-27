@@ -61,26 +61,36 @@ const initializeSocketIO = function(server) {
   const userAndSocketidMap = {};
   this.chatCom = ioInstance.of('/chat_com')
   this.chatCom.on('connection', function(socket) {
-    socket.on('message', async function(message) {
 
-      // 从token里面解析出用户的id，利用id绑定相应的socket，方便实时发送信息
-      message = JSON.parse(message)
-      const { sender: token = '', receiver: roomsId, message: messagePayload } = message;
+    // 用户登录，发送token给Socket.io绑定与用户响应的socket
+    socket.on('bindSocket', async (userData) => {
+      const userDataObj = JSON.parse(userData)
+      const { token } = userDataObj
       const decodedData = jwt.verify(token, process.env.JWT_KEY)
       const { email, userId } = decodedData
       socket.email = email
       socket.userId = userId
       userAndSocketidMap[userId] = socket.id
-      console.log(userId)
+    })
+
+    socket.on('message', async function(message) {
+
+      // 从token里面解析出用户的id，利用id绑定相应的socket，方便实时发送信息
+      message = JSON.parse(message)
+      const { receiver: roomsId, message: messagePayload } = message;
+
+      // 查找此房间的数据
       const roomsData = await Rooms.find({_id: roomsId})
-      console.log(roomsData)
+
+      // 获取房间中所有的成员
       const allMembers = roomsData[0].allMembers
+
+      // 异步发送所有信息
       map(allMembers, (member)=>{
+        // 获取成员的UserId，发送消息
         const id = member._id
-        console.log(id)
         socket.in(userAndSocketidMap[id]).emit('message', messagePayload);
       })
-
     })
   })
 }

@@ -3,6 +3,17 @@ requirejs(['axios', 'jquery', 'io', 'popper', 'bootstrap'], function(axios, $, i
     roomsList: $('.rooms-list')
   }
   const chatCom = io.connect('/chat_com')
+
+  // 获取用户在浏览器中存储的token，发给服务器，用来绑定服务器中的socket
+  const token = localStorage.getItem('token')
+  console.log(token)
+  var data = {
+    type: 'bindSocket',
+    token: token,
+  }
+  console.log(data);
+  chatCom.emit('bindSocket', JSON.stringify(data))
+
   $('a[data-toggle="tab"]').on('shown.bs.tab', function(e) {
     e.target // newly activated tab
     e.relatedTarget // previous active tab
@@ -20,14 +31,11 @@ requirejs(['axios', 'jquery', 'io', 'popper', 'bootstrap'], function(axios, $, i
       UIComponents.roomsList.append(li);
     })
     UIComponents.roomsList.children('li').click((e)=>{
-      console.log(e.target.dataset.id)
+      console.log('聊天列表ID: ', e.target.dataset.id)
       const roomsId = e.target.dataset.id
-      const token = localStorage.getItem('token')
-      console.log(token)
-      var data = {
+      const data = {
+        type: 'chatMessage',
         message: Math.random() + 'hahah',
-        type: 'userMessage',
-        sender: token,
         receiver: roomsId,
       }
       chatCom.send(JSON.stringify(data))
