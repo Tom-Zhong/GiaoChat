@@ -3,6 +3,8 @@ requirejs(['axios', 'jquery', 'io', 'popper', 'bootstrap'], function(axios, $, i
     roomsList: $('.rooms-list'),
     textBox: $('#message'),
     friendsList: $('.friend-list'),
+    friendRequestBox: $('#friend-request'),
+    friendSendRequestBtn: $('#send-friend-request')
   }
   const chatCom = io.connect('/chat_com')
 
@@ -24,8 +26,14 @@ requirejs(['axios', 'jquery', 'io', 'popper', 'bootstrap'], function(axios, $, i
     e.relatedTarget // previous active tab
     console.log(e.target)
   })
-
   const id = localStorage.getItem('uid')
+  UIComponents.friendSendRequestBtn.click(() => {
+    const formData = {
+      friendData: UIComponents.friendRequestBox.val(),
+    }
+    axios.post(`/v1/friends/${id}`, formData)
+  })
+
   axios.get(`/v1/room/${id}`).then(res => {
     const { data } = res
     const { roomList } = data;

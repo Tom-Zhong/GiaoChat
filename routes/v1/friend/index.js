@@ -1,6 +1,7 @@
 import { Router } from 'express'
 import mongoose from 'mongoose'
 import Friend from '../../../models/friend'
+import User from '../../../models/user'
 // import checkAuth from '../../../plugin/check-auth'
 const friend = Router()
 
@@ -16,7 +17,25 @@ friend.get('/:id', async (req, res, next) => {
   }
   try {
     // 通过拥有者ID查询好友列表的资料，使用populate来填充用户信息
-    const result = await Friend.find({ $or: [ { owner }, { menber: { $eq: owner } } ] }).populate({path: 'friend', select: 'name email onLineStatus'}).select('friend -_id')
+    const result = await Friend.find({ $or: [ { owner }, { friend: { $eq: owner } } ] }).populate([{path: 'owner', select: 'name email onLineStatus'}, { path: 'friend', select: 'name email onLineStatus'} ]).select('friend -_id')
+    res.json({
+      code: 0,
+      status: 200,
+      friendsList: result
+    })
+  } catch (error) {
+    res.json({
+      code: -1,
+      message: '服务器炸了'
+    })
+  }
+})
+
+// 获取全部的friends列表
+friend.get('/', async (req, res, next) => {
+  try {
+    // 通过拥有者ID查询好友列表的资料，使用populate来填充用户信息
+    const result = await Friend.find().populate('owner friend').select('')
     res.json({
       code: 0,
       status: 200,
@@ -34,18 +53,39 @@ friend.get('/:id', async (req, res, next) => {
 // 创建好友关系
 friend.post('/:id', async (req, res, next) => {
   const { id: _id = 0 } = req.params
-  const { friendId = 0 } = req.body
-  if (!_id || !friendId) {
+  console.log(req.body);
+  const { friendId = 0, friendData = '' } = req.body
+  let found_id = 0
+  if (!_id || (!friendId && !friendData) ) {
     return res.status(400).json({
       code: -1,
       message: '请提供正确的参数'
     })
   }
+
+  if (friendData) {
+    const result = await User.findOne({
+      $or: [
+        {name: friendData},
+        {email: friendData},
+      ]
+    })
+    found_id = result._id
+    // console.log(res)
+  }
+  
+  if (found_id === _id) {
+    return res.status(403).json({
+      code: -1,
+      message: '不能添加自己为好友'
+    })
+  }
+
   try {
     const friendData = new Friend({
       _id: new mongoose.Types.ObjectId(),
       owner: _id,
-      friend: friendId
+      friend: found_id || friendId
     })
     const saveRes = await friendData.save()
 
