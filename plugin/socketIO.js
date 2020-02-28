@@ -3,6 +3,7 @@ import http from 'http'
 import jwt from 'jsonwebtoken'
 import { map } from 'lodash'
 import Rooms from '../models/rooms'
+import { settingUserOnlineStatus } from '../routes/v1/user/index'
 const initializeSocketIO = function(server) {
   const ioInstance = io(server)
   const _self = this
@@ -70,9 +71,15 @@ const initializeSocketIO = function(server) {
       const { email, userId } = decodedData
       socket.email = email
       socket.userId = userId
+
+      // console.log('用户上线了 ', socket.userId)
       userAndSocketidMap[userId] = socket.id
+
+      // 用户登陆，设置用户在线状态
+      settingUserOnlineStatus(userId, 1)
     })
 
+    // 接收来自用户的讯息
     socket.on('message', async function(message) {
 
       // 从token里面解析出用户的id，利用id绑定相应的socket，方便实时发送信息
@@ -92,7 +99,17 @@ const initializeSocketIO = function(server) {
         socket.in(userAndSocketidMap[id]).emit('message', messagePayload);
       })
     })
+
+    // 用户断开后、清除用户的在线状态
+    socket.on('disconnect', async () => {
+      // console.log('用户离线了 ', socket.userId)
+      delete userAndSocketidMap[socket.userId]
+      // 用户离开了
+      await settingUserOnlineStatus(socket.userId, 0)
+    })
+
   })
+
 }
 
 export { initializeSocketIO }

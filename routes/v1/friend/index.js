@@ -16,11 +16,11 @@ friend.get('/:id', async (req, res, next) => {
   }
   try {
     // 通过拥有者ID查询好友列表的资料，使用populate来填充用户信息
-    const result = await Friend.find({ $or: [ { owner }, { menber: { $eq: owner } } ] }).populate({path: 'friend', select: 'name email '}).select('friend -_id')
+    const result = await Friend.find({ $or: [ { owner }, { menber: { $eq: owner } } ] }).populate({path: 'friend', select: 'name email onLineStatus'}).select('friend -_id')
     res.json({
       code: 0,
       status: 200,
-      friendsArr: result
+      friendsList: result
     })
   } catch (error) {
     res.json({
