@@ -1,5 +1,6 @@
 {
     "env": {
-        "JWT_KEY": "TomZhongBlog"
+        "JWT_KEY": "TomZhongBlog",
+        "MongoDBURL": "mongodb+srv://root:1234@cluster0.mtpng.mongodb.net/myFirstDatabase?retryWrites=true&w=majority"
     }
 }
