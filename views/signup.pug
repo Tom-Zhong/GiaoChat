@@ -8,21 +8,27 @@ block content
     h3(class='text-center pt-3') 登录
     form(action='javascript:;')
       div(class='form-group')
+        label(for='name') 昵称
+        input(type='text', class='form-control' id='name', aria-describedby='nameHelp')
+      div(class='form-group')
         label(for='email') 邮箱地址
         input(type='email', class='form-control' id='email', aria-describedby='emailHelp')
         small(id='emailHelp', class='form-text text-muted mt-2') 大贵保证不会把你的邮箱分享给任何人哈
+      div(class='form-group')
+        label(for='age') 年龄
+        input(type='number', class='form-control' id='age', aria-describedby='ageHelp')
       div(class='form-group')
         label(for='password') 密码
         input(type='password', class='form-control' id='password', aria-describedby='passwordHelp')
       div(class='form-group')
         button(type="submit", class="btn btn-primary w-100 text-align mt-3 align-center signup-btn" id="signup-btn")
           div(class='spinner-border spinner-border-sm mr-1', role='status', aria-hidden='true')
-          span 马上登录
+          span 马上注册
     div(class="modal fade", id="signup-modal", tabindex="-1", role="dialog", aria-labelledby="exampleModalScrollableTitle", aria-hidden="true")
       div(class="modal-dialog modal-dialog-scrollable", role="document")
         div(class="modal-content")
           div(class="modal-header")
-            h5(class="modal-title", id="Modal Title") 登录状态
-          div(class="modal-body", id='modal-body') 不好意思、登录失败了哈哈
+            h5(class="modal-title", id="Modal Title") 注册状态
+          div(class="modal-body", id='modal-body') 不好意思、注册失败了！
           div(class="modal-footer")
             button(type="button", class="btn btn-secondary", data-dismiss="modal") Close
