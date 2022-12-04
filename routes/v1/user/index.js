@@ -68,7 +68,8 @@ user.post('/signup', function(req, res, next) {
     .then(user => {
       // console.log(user)
       if (user.length >= 1) {
-        res.status(409).json({
+        res.status(200).json({
+          code: -1,
           message: 'Mail exists!'
         })
       } else {

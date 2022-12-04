@@ -73,7 +73,7 @@ friend.post('/:id', async (req, res, next) => {
     found_id = result._id
     // console.log(res)
   }
-  
+
   if (found_id === _id) {
     return res.status(403).json({
       code: -1,
@@ -82,18 +82,27 @@ friend.post('/:id', async (req, res, next) => {
   }
 
   try {
-    const friendData = new Friend({
-      _id: new mongoose.Types.ObjectId(),
-      owner: _id,
-      friend: found_id || friendId
-    })
-    const saveRes = await friendData.save()
+    const checkRelationship = await Friend.findOne({ owner: _id, friend: found_id || friendId })
+    if (checkRelationship) {
+      res.json({
+        code: -1,
+        status: 200,
+        msg: '朋友关系已建立'
+      })
+    } else {
+      const friendData = new Friend({
+        _id: new mongoose.Types.ObjectId(),
+        owner: _id,
+        friend: found_id || friendId
+      })
+      const saveRes = await friendData.save()
 
-    res.json({
-      code: 0,
-      status: 200,
-      saveRes: saveRes
-    })
+      res.json({
+        code: 0,
+        status: 200,
+        saveRes: saveRes
+      })
+    }
   } catch (error) {
     res.json({
       code: -1,

@@ -3,8 +3,8 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "dev": "cross-env NODE_ENV=development PORT=3001 nodemon ./bin/www --exec babel-node",
-    "start": "nodemon --exec babel-node ./bin/www ",
+    "dev": "cross-env NODE_ENV=development PORT=3001 nodemon ./bin/www --exec npx babel-node",
+    "start": "nodemon --exec npx babel-node ./bin/www ",
     "debug": "DEBUG=giaochat:* npm start"
   },
   "dependencies": {
@@ -22,9 +22,9 @@
     "socket.io": "^2.3.0"
   },
   "devDependencies": {
-    "@babel/cli": "^7.5.5",
-    "@babel/core": "^7.5.5",
-    "@babel/node": "^7.5.5",
+    "@babel/cli": "^7.19.3",
+    "@babel/core": "^7.20.5",
+    "@babel/node": "^7.20.5",
     "@babel/preset-env": "^7.5.5",
     "nodemon": "^1.19.1"
   }

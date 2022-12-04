@@ -4,20 +4,20 @@ extends layout
 block content
   ul(class="nav nav-tabs", id="myTab",role="tablist")
     li(class="nav-item")
-      a(class="nav-link active", id="home-tab", data-toggle="tab", href="#home", role="tab", aria-controls="home", aria-selected="true") Home
+      a(class="nav-link active", id="home-tab", data-toggle="tab", href="#home", role="tab", aria-controls="home", aria-selected="true") 聊天室
     li(class="nav-item")
-      a(class="nav-link", id="profile-tab", data-toggle="tab", href="#profile", role="tab", aria-controls="profile", aria-selected="false") Profile
+      a(class="nav-link", id="profile-tab", data-toggle="tab", href="#profile", role="tab", aria-controls="profile", aria-selected="false") 朋友列表
     li(class="nav-item")
-      a(class="nav-link", id="contact-tab", data-toggle="tab", href="#contact", role="tab", aria-controls="contact", aria-selected="false") Home
+      a(class="nav-link", id="contact-tab", data-toggle="tab", href="#contact", role="tab", aria-controls="contact", aria-selected="false") 菜单
   div(class="tab-content" id="myTabContent")
     div(class="tab-pane fade show active", id="home", role="tabpanel", ria-labelledby="home-tab")
       ul(class="list-group rooms-list")
         li(class="list-group-item") 获取聊天列表失败
     div(class="tab-pane fade show", id="profile", role="tabpanel", ria-labelledby="profile-tab")
       ul(class="list-group friend-list")
-        li(class="list-group-item") 获取聊天列表失败
+        li(class="list-group-item") 获取聊天朋友失败
     div(class="tab-pane fade show", id="contact", role="tabpanel", ria-labelledby="contact-tab") yosousdaf
   input#message.form-control.mb-2(type="text", placeholder="在此输入发送信息的内容")
   input#friend-request.form-control.mb-2(type="text", placeholder="输入想要添加的好友名称或者邮箱", name="friendData")
   button#send-friend-request 发送好友请求
-    
+
