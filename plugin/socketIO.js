@@ -1,9 +1,9 @@
 import io from 'socket.io'
-import http from 'http'
 import jwt from 'jsonwebtoken'
 import { map } from 'lodash'
 import Rooms from '../models/rooms'
 import { settingUserOnlineStatus } from '../routes/v1/user/index'
+import { validAndSendMessage } from '../routes/v1/message/index'
 const initializeSocketIO = function(server) {
   const ioInstance = io(server)
   const _self = this
@@ -62,7 +62,7 @@ const initializeSocketIO = function(server) {
   const userAndSocketidMap = {};
   this.chatCom = ioInstance.of('/chat_com')
   this.chatCom.on('connection', function(socket) {
-
+    // console.log(socket);
     // 用户登录，发送token给Socket.io绑定与用户响应的socket
     socket.on('bindSocket', async (userData) => {
       const userDataObj = JSON.parse(userData)
@@ -75,6 +75,8 @@ const initializeSocketIO = function(server) {
       // console.log('用户上线了 ', socket.userId)
       userAndSocketidMap[userId] = socket.id
 
+      // console.log('userAndSocketidMap', userAndSocketidMap);
+
       // 用户登陆，设置用户在线状态
       settingUserOnlineStatus(userId, 1)
     })
@@ -84,20 +86,31 @@ const initializeSocketIO = function(server) {
 
       // 从token里面解析出用户的id，利用id绑定相应的socket，方便实时发送信息
       message = JSON.parse(message)
-      const { receiver: roomsId, message: messagePayload } = message;
+      const {
+        receiver: roomsId,
+        message: messagePayload,
+        sender: token
+      } = message;
+
+      const decodedData = jwt.verify(token, process.env.JWT_KEY)
+      const { email, userId } = decodedData
 
       // 查找此房间的数据
-      const roomsData = await Rooms.find({_id: roomsId})
+      const roomsData = await Rooms.findOne({_id: roomsId})
 
       // 获取房间中所有的成员
-      const allMembers = roomsData[0].allMembers
+      const allMembers = roomsData.allMembers
+      // console.log(userAndSocketidMap, allMembers)
 
+      socket.emit('message', messagePayload)
       // 异步发送所有信息
       map(allMembers, (member)=>{
         // 获取成员的UserId，发送消息
-        const id = member._id
+        const id = member;
         socket.in(userAndSocketidMap[id]).emit('message', messagePayload);
       })
+
+      await validAndSendMessage(message)
     })
 
     // 用户断开后、清除用户的在线状态

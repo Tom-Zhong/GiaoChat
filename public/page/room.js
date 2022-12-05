@@ -3,7 +3,6 @@ requirejs(['io', 'jquery'], function(io, $) {
   chatInfra.on('connect', function() {
     chatInfra.emit('get_rooms', {})
     chatInfra.on('rooms_list', function(rooms) {
-      console.log(rooms)
       for (var room in rooms) {
         var roomDiv =
           '<div class="room_div"><span class="room_name">' +
