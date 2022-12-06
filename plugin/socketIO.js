@@ -102,12 +102,24 @@ const initializeSocketIO = function(server) {
       const allMembers = roomsData.allMembers
       // console.log(userAndSocketidMap, allMembers)
 
-      socket.emit('message', messagePayload)
+      socket.emit('message', {
+        messagePayload,
+        senderInfo: {
+          email,
+          userId
+        }
+      })
       // 异步发送所有信息
       map(allMembers, (member)=>{
         // 获取成员的UserId，发送消息
         const id = member;
-        socket.in(userAndSocketidMap[id]).emit('message', messagePayload);
+        socket.in(userAndSocketidMap[id]).emit('message', {
+          messagePayload,
+          senderInfo: {
+            email,
+            userId
+          }
+        });
       })
 
       await validAndSendMessage(message)

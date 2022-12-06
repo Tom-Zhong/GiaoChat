@@ -52,6 +52,7 @@ requirejs(['axios', 'jquery', 'popper', 'bootstrap'], function(axios, $) {
         })
         UIComponents.signupStatus.hide();
       }).catch(e => {
+        console.log('e', e);
         UIComponents.resultText.html(`注册失败了, 请重试, err msg: ${e.message}`)
         UIComponents.signupModal.modal('show')
       }).finally(() => {

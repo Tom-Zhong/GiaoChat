@@ -21,12 +21,12 @@ requirejs(['io', 'jquery'], function(io, $) {
     }
 
     chatCom.on('message', function(data) {
-      // data = JSON.parse(data)
+      data = JSON.parse(data)
       console.log(data)
       $('#messages').append(
-          '<div>[ 文本信息 ] ' + data + '</div>'
+          `<div>[ 文本信息 ] ${ data }</div>`
       )
-    })
+    });
     // if (roomName) {
     //   chatInfra.on('name_set', function(data) {
     //     chatInfra.emit('join_room', { name: roomName })
