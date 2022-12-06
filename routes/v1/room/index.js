@@ -67,6 +67,21 @@ room.post('/:id', async (req, res, next) => {
     type = 1
   }
 
+  const existRoom = await Room.findOne({
+    $and: [
+      { allMembers: { $all: members } },
+      { allMembers: { $size: 2 } }
+    ]
+  });
+
+  if (existRoom) {
+    return res.json({
+      code: 0,
+      msg: '返回已有的聊天room id',
+      res: existRoom
+    })
+  }
+
   try {
       const room = new Room({
         _id: new mongoose.Types.ObjectId(),
@@ -80,7 +95,7 @@ room.post('/:id', async (req, res, next) => {
       const result = await room.save()
       res.json({
         code: 0,
-        msg: '',
+        msg: '创建新聊天成功',
         res: result
       })
   } catch (error) {
