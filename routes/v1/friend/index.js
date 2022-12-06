@@ -17,11 +17,12 @@ friend.get('/:id', async (req, res, next) => {
   }
   try {
     // 通过拥有者ID查询好友列表的资料，使用populate来填充用户信息
-    const result = await Friend.find({ owner }).populate([{path: 'owner', select: 'name email onLineStatus'}, { path: 'friend', select: 'name email onLineStatus'} ]).select('friend -_id')
+    const resultAsOwner = await Friend.find({ owner }).populate([ { path: 'friend', select: 'name email onLineStatus -_id', populate: { path: 'friend' }} ]).select('-owner -_id -updatedAt -createTime')
+    const resultAsFriend = await Friend.find({ friend: owner }).populate([ { path: 'owner', select: 'name email onLineStatus -_id'} ]).select('-friend -_id -updatedAt -createTime')
     res.json({
       code: 0,
       status: 200,
-      friendsList: result
+      friendsList: resultAsOwner.concat(resultAsFriend)
     })
   } catch (error) {
     res.json({
@@ -58,8 +59,8 @@ friend.post('/:id', async (req, res, next) => {
   let found_id = 0
   if (!_id || (!friendId && !friendData) ) {
     return res.status(400).json({
-      code: -1,
-      message: '请提供正确的参数'
+      code: -4,
+      message: '请提供合理的请求参数'
     })
   }
 
@@ -70,14 +71,15 @@ friend.post('/:id', async (req, res, next) => {
         {email: friendData},
       ]
     })
-    found_id = result._id
-    // console.log(res)
+    if (result) {
+      found_id = result._id
+    }
   }
 
   if (found_id === _id) {
     return res.status(403).json({
-      code: -1,
-      message: '不能添加自己为好友'
+      code: -2,
+      msg: '不能添加自己为好友'
     })
   }
 
@@ -86,7 +88,6 @@ friend.post('/:id', async (req, res, next) => {
     if (checkRelationship) {
       res.json({
         code: -1,
-        status: 200,
         msg: '朋友关系已建立'
       })
     } else {
@@ -100,13 +101,14 @@ friend.post('/:id', async (req, res, next) => {
       res.json({
         code: 0,
         status: 200,
-        saveRes: saveRes
+        saveRes: saveRes,
+        msg: '成功建立好友关系'
       })
     }
   } catch (error) {
     res.json({
-      code: -1,
-      message: '服务器炸了'
+      code: 3,
+      msg: '请提供合理的请求参数或者服务器未能响应你的需求'
     })
   }
 })

@@ -64,7 +64,7 @@ requirejs(['axios', 'jquery', 'io', 'popper', 'bootstrap'], function(axios, $, i
       UIComponents.friendsList.empty('li')
 
       friendsList.length > 0 && friendsList.map(item => {
-        const firendData = item.friend
+        const firendData = item.friend || item.owner
         var li = `<li class="list-group-item" data-id="${ firendData._id }" data-email="${ firendData.email }"> ${ firendData.name } 在线状态: ${ firendData.onLineStatus ? '在线' : '离线'  } </li>`
         UIComponents.friendsList.append(li)
       })
@@ -118,6 +118,13 @@ requirejs(['axios', 'jquery', 'io', 'popper', 'bootstrap'], function(axios, $, i
       friendData: UIComponents.friendRequestBox.val(),
     }
     axios.post(`/v1/friends/${id}`, formData)
+        .then(res => {
+           const { data = {} } = res;
+           alert(`行为代码: ${data.code}, ${data.msg}`)
+        })
+        .catch(err => {
+           alert('服务器未知错误')
+        })
   })
 
   initMainPage()
