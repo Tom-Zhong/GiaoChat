@@ -17,8 +17,8 @@ friend.get('/:id', async (req, res, next) => {
   }
   try {
     // 通过拥有者ID查询好友列表的资料，使用populate来填充用户信息
-    const resultAsOwner = await Friend.find({ owner }).populate([ { path: 'friend', select: 'name email onLineStatus -_id', populate: { path: 'friend' }} ]).select('-owner -_id -updatedAt -createTime')
-    const resultAsFriend = await Friend.find({ friend: owner }).populate([ { path: 'owner', select: 'name email onLineStatus -_id'} ]).select('-friend -_id -updatedAt -createTime')
+    const resultAsOwner = await Friend.find({ owner }).populate([ { path: 'friend', select: 'name email onLineStatus', populate: { path: 'friend' }} ]).select('-owner -_id -updatedAt -createTime')
+    const resultAsFriend = await Friend.find({ friend: owner }).populate([ { path: 'owner', select: 'name email onLineStatus'} ]).select('-friend -_id -updatedAt -createTime')
     res.json({
       code: 0,
       status: 200,
