@@ -78,6 +78,11 @@ room.post('/:id', async (req, res, next) => {
         allMembers: members,
       })
       const result = await room.save()
+      res.json({
+        code: 0,
+        msg: '',
+        res: result
+      })
   } catch (error) {
     console.log(error)
     return res.status(400).json({
@@ -85,36 +90,6 @@ room.post('/:id', async (req, res, next) => {
       msg: 'fail to create chat room'
     })
   }
-  // let faildCreateList = []
-  // let successCrateList = []
-
-  // 循环创建聊天列表
-  // await Promise.all(map(members, async item => {
-  //   const member = item
-  //   try {
-  //     const room = new Room({
-  //       _id: new mongoose.Types.ObjectId(),
-  //       creatorId,
-  //       ownerId,
-  //       title,
-  //       desc,
-  //       member,
-  //       type,
-  //       allMembers: members,
-  //     })
-  //     const result = await room.save()
-  //     successCrateList.push(result)
-  //   } catch (error) {
-  //     faildCreateList.push(member)
-  //   }
-  // }))
-
-  res.json({
-    code: 0,
-    status: 'ok',
-    // faildCreateList,
-    // successCrateList,
-  })
 
 })
 

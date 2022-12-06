@@ -82,10 +82,14 @@ requirejs(['axios', 'jquery', 'io', 'popper', 'bootstrap'], function(axios, $, i
         const data = {
           ownerId,
           members,
-          title: '简单的聊天室'
+          title: `与${e.target.dataset.name}的聊天`
         }
         axios.post(`/v1/room/${ownerId}`, data).then(res => {
-          console.log(res);
+          const { data = {} } = res
+          if( data.code === 0) {
+            const roomsId = data.res._id
+            window.location.href = `/chatroom?room=${roomsId}`
+          }
         })
       })
 
