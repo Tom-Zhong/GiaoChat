@@ -1,6 +1,6 @@
 import io from 'socket.io'
 import jwt from 'jsonwebtoken'
-import { map } from 'lodash'
+import { map, forIn } from 'lodash'
 import Rooms from '../models/rooms'
 import { settingUserOnlineStatus } from '../routes/v1/user/index'
 import { validAndSendMessage } from '../routes/v1/message/index'
@@ -72,13 +72,18 @@ const initializeSocketIO = function(server) {
         const { email, userId } = decodedData
         socket.email = email
         socket.userId = userId
-        // console.log('userAndSocketidMap', !userAndSocketidMap[userId]);
-        // console.log('用户上线了 ', socket.userId)
+
+        if (userAndSocketidMap[userId] !== null) {
+          await sendGoOnlineInfo(userId, email,  socket, userAndSocketidMap, "上线啦")
+        }
+
         userAndSocketidMap[userId] = socket.id
 
         // 用户登陆，设置用户在线状态
-        settingUserOnlineStatus(userId, 1)
-        sendGoOnlineInfo(userId, email,  socket, userAndSocketidMap, {})
+        if (userId) {
+          console.log('userId1', userId);
+          settingUserOnlineStatus(userId, 1)
+        }
       } catch (e) {
         console.log(e);
       }
@@ -131,13 +136,19 @@ const initializeSocketIO = function(server) {
     // 用户断开后、清除用户的在线状态
     socket.on('disconnect', async () => {
       console.log('用户离线了 ', socket.userId)
-      // delete userAndSocketidMap[socket.userId]
+      userAndSocketidMap[socket.userId] = null
       // 用户离开了
       await settingUserOnlineStatus(socket.userId, 0)
     })
 
   })
-
+  setInterval(() => {
+    forIn(userAndSocketidMap, (value, key) => {
+      if (value === null) {
+        delete userAndSocketidMap[key]
+      }
+    })
+  }, 15000)
 }
 
 export { initializeSocketIO }

@@ -176,9 +176,11 @@ user.delete('/:userId', checkAuth, (req, res, next) => {
 })
 
 const settingUserOnlineStatus = async (_id, onLineStatus) => {
-  const res = await User.findByIdAndUpdate({_id}, { $set: { onLineStatus } } , { new: true    })
-  // console.log(res)
-  return res ? true : false
+  try {
+    const res = await User.findByIdAndUpdate(_id, { $set: { onLineStatus } } , { new: true    })
+  } catch (e) {
+    console.log(e);
+  }
 }
 export default user
 

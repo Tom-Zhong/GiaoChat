@@ -115,7 +115,7 @@ requirejs(['axios', 'jquery', 'io', 'popper', 'bootstrap'], function(axios, $, i
 
     const toastLiveExample = document.getElementById('liveToast')
     chatCom.on('online', msg => {
-      UIComponents.toastHeader.text(`${msg.info}`)
+      UIComponents.toastHeader.text(`${msg.msgPayload}`)
       const toast = new bootstrap.Toast(toastLiveExample)
       toast.show()
     })

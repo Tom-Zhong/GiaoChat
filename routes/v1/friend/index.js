@@ -123,7 +123,6 @@ const sendGoOnlineInfo = async (_id, email, socket, userAndSocketidMap, msgPaylo
     console.log(userAndSocketidMap[info._id]);
     if (userAndSocketidMap[info._id]) {
       socket.in(userAndSocketidMap[info._id]).emit('online', {
-        info: `${email} go online`,
         msgPayload
       });
     }
