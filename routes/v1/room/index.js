@@ -28,7 +28,7 @@ room.get('/:id', async (req, res, next) => {
     // const privateChatRes = await Room.find({ member: { $eq: ownerId }, type: { $eq: 0 }, ownerId: { $ne: ownerId } } ).select('-creatorId -ownerId -createTime -updatedAt -allMembers') // 自己是成员的私聊
     // const memberResult = await Room.find({ member: {$eq: ownerId }, type: {$eq: 0} } ).select('-creatorId -ownerId -createTime -updatedAt -allMembers') // 群聊列表
     returnRes = ownerResult
-    console.log(returnRes);
+    // console.log(returnRes);
     // returnRes = returnRes.concat(privateChatRes || [])
     res.json({
       code: 0,

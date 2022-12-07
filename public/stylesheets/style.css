@@ -26,13 +26,13 @@ div#messages {
   overflow: scroll;
 }
 
-input#message {
-  width: 80%;
-}
+/*input#message {*/
+/*  width: 80%;*/
+/*}*/
 
-button#send {
-  width: 20%;
-}
+/*button#send {*/
+/*  width: 20%;*/
+/*}*/
 
 header {
   background-color: #4192c1;

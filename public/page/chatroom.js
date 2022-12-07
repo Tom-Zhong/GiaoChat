@@ -1,4 +1,4 @@
-requirejs(['io', 'jquery'], function(io, $) {
+requirejs(['io', 'jquery', 'axios'], function(io, $, axios) {
   $(function() {
     var chatCom = io.connect('/chat_com')
     const roomName = decodeURI(

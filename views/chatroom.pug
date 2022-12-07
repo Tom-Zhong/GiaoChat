@@ -5,14 +5,9 @@ block content
     div#messages
 
     div#message-editter
-      form.form-inline(action='javascript:;')
-        label.sr-only 输入发送信息
-        input#message.form-control.mb-2(type="text", placeholder="在此输入发送信息的内容")
-        button#send.btn.btn-primary.mb-2(type="submit") 发送
-  //- section#nameform.modal-ws
-  //-   div.backdrop
-  //-   div.popup
-  //-     div.pophead Please enter a nickname
-  //-     div.popbody
-  //-       input#nickname(type='text')
-  //-       input#setname(type='button', value='Set Name')
+      form(class="row g-3", action='javascript:;')
+        div(class="col-9")
+          textarea(class="form-control", aria-label="With textarea", id="message")
+        div(class="col-3")
+          button(type="submit", class="btn btn-primary mb-3", id="send") 发送
+

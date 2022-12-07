@@ -1,5 +1,6 @@
 import { Router } from 'express'
 import mongoose from 'mongoose'
+import { map } from 'lodash'
 import Friend from '../../../models/friend'
 import User from '../../../models/user'
 // import checkAuth from '../../../plugin/check-auth'
@@ -113,4 +114,24 @@ friend.post('/:id', async (req, res, next) => {
   }
 })
 
+const sendGoOnlineInfo = async (_id, email, socket, userAndSocketidMap, msgPayload) => {
+  const resultAsOwner = await Friend.find({ owner: _id }).populate([ { path: 'friend', select: 'name email onLineStatus', populate: { path: 'friend' }} ]).select('-owner -_id -updatedAt -createTime')
+  const resultAsFriend = await Friend.find({ friend: _id }).populate([ { path: 'owner', select: 'name email onLineStatus'} ]).select('-friend -_id -updatedAt -createTime')
+  const result = resultAsOwner.concat(resultAsFriend)
+  map(result, friendInfo => {
+    const info = friendInfo.friend || friendInfo.owner;
+    console.log(userAndSocketidMap[info._id]);
+    if (userAndSocketidMap[info._id]) {
+      socket.in(userAndSocketidMap[info._id]).emit('online', {
+        info: `${email} go online`,
+        msgPayload
+      });
+    }
+  })
+}
+
 export default friend
+
+export {
+  sendGoOnlineInfo
+}

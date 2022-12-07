@@ -4,6 +4,7 @@ import { map } from 'lodash'
 import Rooms from '../models/rooms'
 import { settingUserOnlineStatus } from '../routes/v1/user/index'
 import { validAndSendMessage } from '../routes/v1/message/index'
+import { sendGoOnlineInfo } from '../routes/v1/friend/index'
 const initializeSocketIO = function(server) {
   const ioInstance = io(server)
   const _self = this
@@ -62,23 +63,25 @@ const initializeSocketIO = function(server) {
   const userAndSocketidMap = {};
   this.chatCom = ioInstance.of('/chat_com')
   this.chatCom.on('connection', function(socket) {
-    // console.log(socket);
     // 用户登录，发送token给Socket.io绑定与用户响应的socket
     socket.on('bindSocket', async (userData) => {
-      const userDataObj = JSON.parse(userData)
-      const { token } = userDataObj
-      const decodedData = jwt.verify(token, process.env.JWT_KEY)
-      const { email, userId } = decodedData
-      socket.email = email
-      socket.userId = userId
+      try {
+        const userDataObj = JSON.parse(userData)
+        const { token } = userDataObj
+        const decodedData = jwt.verify(token, process.env.JWT_KEY)
+        const { email, userId } = decodedData
+        socket.email = email
+        socket.userId = userId
+        // console.log('userAndSocketidMap', !userAndSocketidMap[userId]);
+        // console.log('用户上线了 ', socket.userId)
+        userAndSocketidMap[userId] = socket.id
 
-      // console.log('用户上线了 ', socket.userId)
-      userAndSocketidMap[userId] = socket.id
-
-      // console.log('userAndSocketidMap', userAndSocketidMap);
-
-      // 用户登陆，设置用户在线状态
-      settingUserOnlineStatus(userId, 1)
+        // 用户登陆，设置用户在线状态
+        settingUserOnlineStatus(userId, 1)
+        sendGoOnlineInfo(userId, email,  socket, userAndSocketidMap, {})
+      } catch (e) {
+        console.log(e);
+      }
     })
 
     // 接收来自用户的讯息
@@ -127,8 +130,8 @@ const initializeSocketIO = function(server) {
 
     // 用户断开后、清除用户的在线状态
     socket.on('disconnect', async () => {
-      // console.log('用户离线了 ', socket.userId)
-      delete userAndSocketidMap[socket.userId]
+      console.log('用户离线了 ', socket.userId)
+      // delete userAndSocketidMap[socket.userId]
       // 用户离开了
       await settingUserOnlineStatus(socket.userId, 0)
     })

@@ -1,7 +1,7 @@
 requirejs.config({
   baseUrl:"./js",
   paths: {
-    jquery: '/scripts/jquery.slim.min',
+    jquery: '/scripts/jquery-3.6.0.min',
     popper: '/scripts/popper.min',
     bootstrap: '/scripts/bootstrap.min',
     io: '/socket.io/socket.io.js',
@@ -12,6 +12,14 @@ requirejs.config({
     signinPage: '/page/signin',
     mainPage: '/page/main',
     axios: 'https://cdn.bootcss.com/axios/0.19.2/axios.min'
+  },
+  shim: {
+    "bootstrap": ["jquery"]
+  },
+  map: {
+    "*": {
+      "@popperjs/core": "popper"
+    }
   }
 })
 

@@ -1,13 +1,15 @@
-requirejs(['axios', 'jquery', 'io', 'popper', 'bootstrap'], function(axios, $, io) {
+requirejs(['axios', 'jquery', 'io', 'popper', 'bootstrap'], function(axios, $, io, popper, bootstrap, popper) {
   const UIComponents = {
     roomsList: $('.rooms-list'),
     textBox: $('#message'),
     friendsList: $('.friend-list'),
     friendRequestBox: $('#friend-request'),
-    friendSendRequestBtn: $('#send-friend-request')
+    friendSendRequestBtn: $('#send-friend-request'),
+    toastHeader: $('.toast-header .me-auto')
   }
   const chatCom = io.connect('/chat_com')
   chatCom.on('message', e => {console.log(e)})
+
 
   function initMainPage () {
 
@@ -110,6 +112,13 @@ requirejs(['axios', 'jquery', 'io', 'popper', 'bootstrap'], function(axios, $, i
     //     bindSocket()
     //   }
     // })
+
+    const toastLiveExample = document.getElementById('liveToast')
+    chatCom.on('online', msg => {
+      UIComponents.toastHeader.text(`${msg.info}`)
+      const toast = new bootstrap.Toast(toastLiveExample)
+      toast.show()
+    })
   }
 
 

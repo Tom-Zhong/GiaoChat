@@ -2,21 +2,30 @@ extends layout
 
 
 block content
-  ul(class="nav nav-tabs", id="myTab",role="tablist")
-    li(class="nav-item")
-      a(class="nav-link active", id="home-tab", data-toggle="tab", href="#home", role="tab", aria-controls="home", aria-selected="true") 聊天室
-    li(class="nav-item")
-      a(class="nav-link", id="profile-tab", data-toggle="tab", href="#profile", role="tab", aria-controls="profile", aria-selected="false") 朋友列表
-    li(class="nav-item")
-      a(class="nav-link", id="contact-tab", data-toggle="tab", href="#contact", role="tab", aria-controls="contact", aria-selected="false")  个人设置
-  div(class="tab-content" id="myTabContent")
-    div(class="tab-pane fade show active", id="home", role="tabpanel", ria-labelledby="home-tab")
+  div(class="nav nav-tabs", id="nav-tab", role="tablist")
+    button(class="nav-link active", id="nav-home-tab", data-bs-toggle="tab" data-bs-target="#nav-home", data-toggle="tab", role="tab", aria-controls="home", aria-selected="true") 聊天室
+    button(class="nav-link", id="nav-profile-tab", data-toggle="tab", data-bs-toggle="tab", data-bs-target="#nav-profile", role="tab", aria-controls="profile", aria-selected="false") 朋友列表
+    button(class="nav-link", id="nav-contact-tab", data-toggle="tab", data-bs-toggle="tab", data-bs-target="#nav-contact",  role="tab", aria-controls="contact", aria-selected="false")  个人设置
+  div(class="tab-content" id="nav-tabContent")
+    div(class="tab-pane fade show active", id="nav-home", role="tabpanel", ria-labelledby="home-tab")
       ul(class="list-group rooms-list")
         li(class="list-group-item") 获取聊天列表失败
-    div(class="tab-pane fade show", id="profile", role="tabpanel", ria-labelledby="profile-tab")
+    div(class="tab-pane fade", id="nav-profile", role="tabpanel", ria-labelledby="profile-tab")
       ul(class="list-group friend-list")
         li(class="list-group-item") 获取聊天朋友失败
-    div(class="tab-pane fade show", id="contact", role="tabpanel", ria-labelledby="contact-tab")
+    div(class="tab-pane fade", id="nav-contact", role="tabpanel", ria-labelledby="contact-tab")
       input#friend-request.form-control.mb-2(type="text", placeholder="输入想要添加的好友名称或者邮箱", name="friendData")
       button#send-friend-request 发送好友请求
+
+  div
+      button(class="btn btn-primary", id="liveToastBtn") Show live toast
+      div(class="position-fixed bottom-0 end-0 p-3", style="z-index: 12")
+        div(id="liveToast",class="toast", role="alert", aria-live="assertive", aria-atomic="true")
+          div(class="toast-header")
+            img(src="https://placeholder.pics/svg/30", class="rounded me-2", alt="...")
+            strong(class="me-auto") Bootstrap
+            small info
+            button(type="button", class="btn-close", data-bs-dismiss="toast", aria-label="Close")
+          div(class="toast-body")
+            | 上线啦
 
