@@ -6,9 +6,12 @@ import jwt from "jsonwebtoken";
 const message = Router()
 
 // 通过用户ID获取历史消息
-message.get('/:id/:roomsId', async (req, res, next) => {
-  const { id: _id = 0, roomsId } = req.params
-  if (!_id || !roomsId) {
+message.post('/:roomsId/:page', async (req, res, next) => {
+  const { roomsId, page, } = req.params
+  const { token } = req.body
+  const decodedData = jwt.verify(token, process.env.JWT_KEY)
+  const { userId } = decodedData
+  if (!userId || !roomsId || !page) {
     return res.status(400).json({
       code: -1,
       message: '请提供正确的参数'
@@ -16,13 +19,17 @@ message.get('/:id/:roomsId', async (req, res, next) => {
   }
   try {
     const historyMessages = await Message.find({
-      to: { $in: [_id] },
+      to: { $in: [userId] },
       roomsId
-    }).select('-_id content roomsId from type')
+    }).select('-_id content roomsId from type createTime').sort({createTime: -1})
+        .populate([ { path: 'from', select: 'name -_id'} ])
+        .limit(5)
+        .skip(Number(page) * 5)
     res.json({
       code: 0,
       status: 200,
       messages: historyMessages,
+      length: historyMessages.length
     })
   } catch (error) {
     console.log(error)
