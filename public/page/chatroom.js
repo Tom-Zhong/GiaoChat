@@ -7,7 +7,78 @@ requirejs(['io', 'jquery', 'axios', 'betterScroll'], function(io, $, axios, Btte
 
     let page = 0;
     let noMoreMsgLoad = false;
-    function getMessages () {
+    let bs = BtterScroll.createBScroll('.scroll-wrapper', {
+      // wheel:true,
+      scrollbar: true,
+      pullDownRefresh: {
+        threshold: 70,
+        stop: 56,
+      },
+      scrollY: true,
+      boundTime: 800
+    })
+
+    function renderChatHistoryNode (msg, way) {
+      if (way === 'get') {
+        if (msg.from._id === localStorage.getItem('uid')) {
+          $('.pulldown-list .chat-history ul').append(
+              `<li>
+                  <div class="message-data">
+                    <span class="message-data-name" >${msg.from.name}</span> <i class="fa fa-circle me"></i>
+                    <span class="message-data-time" >${msg.createTime}</span> &nbsp; &nbsp;
+                  </div>
+                  <div class="message my-message">
+                    ${msg.content}
+                  </div>
+                </li>`
+          )
+        } else {
+          $('.pulldown-list .chat-history ul').append(
+              `<li class="clearfix">
+                  <div class="message-data align-right">
+                    <span class="message-data-time" >${msg.createTime}</span> &nbsp; &nbsp;
+                    <span class="message-data-name" >${msg.from.name}</span> <i class="fa fa-circle me"></i>
+                    
+                  </div>
+                  <div class="message other-message float-right">
+                    ${msg.content}
+                  </div>
+                </li>`
+          )
+        }
+
+        return
+      }
+
+      if (msg.from._id === localStorage.getItem('uid')) {
+        $('.pulldown-list .chat-history ul').prepend(
+            `<li>
+                  <div class="message-data">
+                    <span class="message-data-name" >${msg.from.name}</span> <i class="fa fa-circle me"></i>
+                    <span class="message-data-time" >${msg.createTime}</span> &nbsp; &nbsp;
+                  </div>
+                  <div class="message my-message">
+                    ${msg.content}
+                  </div>
+                </li>`
+        )
+        return
+      }
+
+      $('.pulldown-list .chat-history ul').prepend(
+          `<li class="clearfix">
+                  <div class="message-data align-right">
+                    <span class="message-data-time" >${msg.createTime}</span> &nbsp; &nbsp;
+                    <span class="message-data-name" >${msg.from.name}</span> <i class="fa fa-circle me"></i>
+                    
+                  </div>
+                  <div class="message other-message float-right">
+                    ${msg.content}
+                  </div>
+                </li>`
+      )
+    }
+    function getMessages (cb) {
       axios.post(`/v1/messages/${roomName}/${page}`, {
         token: localStorage.getItem('token')
       })
@@ -19,10 +90,9 @@ requirejs(['io', 'jquery', 'axios', 'betterScroll'], function(io, $, axios, Btte
               return
             }
             data.length > 0 && $.each(data.messages, (i, msg) => {
-              $('.pulldown-list').prepend(
-                  `<div>[ ${ msg.from.name } ] ${ msg.content }</div>`
-              )
+              renderChatHistoryNode(msg)
             })
+            cb && cb()
           })
           .catch(err => {
             console.log(err)
@@ -43,34 +113,30 @@ requirejs(['io', 'jquery', 'axios', 'betterScroll'], function(io, $, axios, Btte
       }
 
       bindSocket()
-      getMessages()
 
-      let bs = BtterScroll.createBScroll('.scroll-wrapper', {
-        // wheel:true,
-        scrollbar: true,
-        pullDownRefresh: {
-          threshold: 70,
-          stop: 56,
-        },
-        scrollY: true,
-        boundTime: 800
-      })
       bs.on('pullingDown', async () => {
         if (!noMoreMsgLoad) {
           await getMessages(page++)
         }
-        bs.finishPullDown()
+        setTimeout(() => {
+          bs.finishPullDown()
+          bs.refresh()
+        }, 30)
+      })
+
+      getMessages(() => {
         bs.refresh()
+        bs.scrollTo(0, bs.maxScrollY)
       })
     }
 
     chatCom.on('message', function(data) {
-      if (data.senderInfo) {
-        const { senderInfo, messagePayload } = data
-        $('.pulldown-list').append(
-            `<div>[ ${ senderInfo.email } ] ${ messagePayload }</div>`
-        )
-      };
+      console.log(data)
+      if (data) {
+        renderChatHistoryNode(data, 'get')
+        bs.refresh()
+        bs.scrollTo(0, bs.maxScrollY)
+      }
     });
 
     $('#send').click(function() {

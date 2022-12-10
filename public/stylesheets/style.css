@@ -1,3 +1,6 @@
+/*  reset.min.css */
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td,article,aside,canvas,details,embed,figure,figcaption,footer,header,hgroup,menu,nav,output,ruby,section,summary,time,mark,audio,video{margin:0;padding:0;border:0;font-size:100%;font:inherit;vertical-align:baseline}article,aside,details,figcaption,figure,footer,header,hgroup,menu,nav,section{display:block}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}table{border-collapse:collapse;border-spacing:0}
+
 html {
   height: 100%;
 }
@@ -27,18 +30,20 @@ div#messages {
 }
 
 .scroll-wrapper {
-  height: 400px;
+  height: -moz-calc(100vh - 120px);
+  height: -webkit-calc(100vh - 120px);
+  height: calc(100vh - 120px);
   position: relative;
   overflow: hidden;
   border: 1px solid #00f;
 }
 
-.scroll-wrapper li {
-  height: 40px;
-  border: 1px solid #f00;
-  margin: 10px 0;
-}
-.scroll-wrapper {
+/*.scroll-wrapper li {*/
+/*  height: 40px;*/
+/*  border: 1px solid #f00;*/
+/*  margin: 10px 0;*/
+/*}*/
+.pulldown-scroller {
 }
 .pulldown-wrapper {
   position: absolute;
@@ -164,3 +169,74 @@ a {
   bottom: 80px;
   text-decoration: none;
  } */
+
+
+.chat .chat-history {
+  padding: 15px 20px;
+  border-bottom: 2px solid white;
+  /*overflow-y: scroll;*/
+  /*min-height: 600px;*/
+}
+.chat .chat-history .message-data {
+  margin-bottom: 15px;
+}
+.chat .chat-history .message-data-time {
+  color: #a8aab1;
+  padding-left: 6px;
+}
+.chat .chat-history .message {
+  color: white;
+  padding: 18px 20px;
+  line-height: 26px;
+  font-size: 16px;
+  border-radius: 7px;
+  margin-bottom: 30px;
+  width: 90%;
+  position: relative;
+}
+.chat .chat-history .message:after {
+  bottom: 100%;
+  left: 7%;
+  border: solid transparent;
+  content: " ";
+  height: 0;
+  width: 0;
+  position: absolute;
+  pointer-events: none;
+  border-bottom-color: #86BB71;
+  border-width: 10px;
+  margin-left: -10px;
+}
+.chat .chat-history .my-message {
+  background: #86BB71;
+}
+.chat .chat-history .other-message {
+  background: #94C2ED;
+}
+.chat .chat-history .other-message:after {
+  border-bottom-color: #94C2ED;
+  left: 93%;
+}
+
+
+.align-left {
+  text-align: left;
+}
+
+.align-right {
+  text-align: right;
+}
+
+.float-right {
+  float: right;
+}
+
+.clearfix:after {
+  visibility: hidden;
+  display: block;
+  font-size: 0;
+  content: " ";
+  clear: both;
+  height: 0;
+}
+

@@ -3,6 +3,7 @@ import mongoose from 'mongoose'
 import Message from '../../../models/message'
 import Rooms from '../../../models/rooms'
 import jwt from "jsonwebtoken";
+import {map} from "lodash";
 const message = Router()
 
 // 通过用户ID获取历史消息
@@ -22,7 +23,7 @@ message.post('/:roomsId/:page', async (req, res, next) => {
       to: { $in: [userId] },
       roomsId
     }).select('-_id content roomsId from type createTime').sort({createTime: -1})
-        .populate([ { path: 'from', select: 'name -_id'} ])
+        .populate([ { path: 'from', select: 'name'} ])
         .limit(5)
         .skip(Number(page) * 5)
     res.json({
@@ -41,7 +42,7 @@ message.post('/:roomsId/:page', async (req, res, next) => {
 })
 
 
-const validAndSendMessage = async (message, socket) => {
+const validAndSendMessage = async (message, socket, userAndSocketidMap) => {
   const {
     sender: token,
     receiver: roomsId,
@@ -69,13 +70,23 @@ const validAndSendMessage = async (message, socket) => {
         type: 0,
       })
       await newMessage.save()
+
+      console.log('newMessage', newMessage._id )
+      const message = await Message.findOne({
+        _id: newMessage._id
+      })
+          .select('-_id content roomsId from type createTime')
+          .populate([ { path: 'from', select: 'name'} ])
+      socket.emit('message', message)
+
+      map(allMembers, (member)=>{
+        // 获取成员的UserId，发送消息
+        const id = member;
+        socket.in(userAndSocketidMap[id]).emit('message', message);
+      })
     } catch (error) {
       return false
     }
-
-    // 检查用户是不是在线
-
-    // 如果在线，发送消息，没有在线，等上线后再去获取未读消息
 
   } catch (error) {
     return false
