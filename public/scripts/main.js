@@ -11,7 +11,8 @@ requirejs.config({
     signupPage: '/page/signup',
     signinPage: '/page/signin',
     mainPage: '/page/main',
-    axios: 'https://cdn.bootcss.com/axios/0.19.2/axios.min'
+    axios: 'https://cdn.bootcss.com/axios/0.19.2/axios.min',
+    betterScroll: '/scripts/better-scroll.min'
   },
   shim: {
     "bootstrap": ["jquery"]

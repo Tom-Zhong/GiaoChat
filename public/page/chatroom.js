@@ -1,4 +1,4 @@
-requirejs(['io', 'jquery', 'axios'], function(io, $, axios) {
+requirejs(['io', 'jquery', 'axios', 'betterScroll'], function(io, $, axios, BtterScroll) {
   $(function() {
     var chatCom = io.connect('/chat_com')
     const roomName = decodeURI(
@@ -18,6 +18,23 @@ requirejs(['io', 'jquery', 'axios'], function(io, $, axios) {
       }
 
       bindSocket()
+
+      let bs = BtterScroll.createBScroll('.scroll-wrapper', {
+        // wheel:true,
+        scrollbar: true,
+        pullDownRefresh: {
+          threshold: 70,
+          stop: 56,
+        },
+        scrollY: true,
+        boundTime: 800
+      })
+      bs.on('pullingDown', function () {
+        setTimeout(() => {
+          bs.finishPullDown()
+          bs.refresh()
+        }, 2000)
+      })
     }
 
     chatCom.on('message', function(data) {

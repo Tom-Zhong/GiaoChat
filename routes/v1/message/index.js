@@ -5,6 +5,35 @@ import Rooms from '../../../models/rooms'
 import jwt from "jsonwebtoken";
 const message = Router()
 
+// 通过用户ID获取历史消息
+message.get('/:id/:roomsId', async (req, res, next) => {
+  const { id: _id = 0, roomsId } = req.params
+  if (!_id || !roomsId) {
+    return res.status(400).json({
+      code: -1,
+      message: '请提供正确的参数'
+    })
+  }
+  try {
+    const historyMessages = await Message.find({
+      to: { $in: [_id] },
+      roomsId
+    }).select('-_id content roomsId from type')
+    res.json({
+      code: 0,
+      status: 200,
+      messages: historyMessages,
+    })
+  } catch (error) {
+    console.log(error)
+    res.json({
+      code: -1,
+      message: '服务器炸了'
+    })
+  }
+})
+
+
 const validAndSendMessage = async (message, socket) => {
   const {
     sender: token,
@@ -45,6 +74,8 @@ const validAndSendMessage = async (message, socket) => {
     return false
   }
 }
+
+export default message
 
 export {
   validAndSendMessage
