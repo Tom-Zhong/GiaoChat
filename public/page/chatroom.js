@@ -92,7 +92,7 @@ requirejs(['io', 'jquery', 'axios', 'betterScroll'], function(io, $, axios, Btte
             data.length > 0 && $.each(data.messages, (i, msg) => {
               renderChatHistoryNode(msg)
             })
-            cb && cb()
+            typeof cb === 'function' && cb()
           })
           .catch(err => {
             console.log(err)
