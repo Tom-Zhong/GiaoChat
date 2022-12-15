@@ -17,6 +17,9 @@ requirejs(['io', 'jquery', 'axios', 'betterScroll'], function(io, $, axios, Btte
       scrollY: true,
       boundTime: 800
     })
+    let UIComponents = {
+      file: $('#file'),
+    }
 
     function renderChatHistoryNode (msg, way) {
       if (way === 'get') {
@@ -127,6 +130,19 @@ requirejs(['io', 'jquery', 'axios', 'betterScroll'], function(io, $, axios, Btte
       getMessages(() => {
         bs.refresh()
         bs.scrollTo(0, bs.maxScrollY)
+      })
+
+      UIComponents.file.on('change', function () {
+        let formData = new FormData()
+        let file = this.files[0]
+        console.log(file)
+        formData.append('file', file)
+
+        const config = {};
+
+        axios.post("/file-upload", formData, config).then(res => {
+          console.log(res);
+        });
       })
     }
 

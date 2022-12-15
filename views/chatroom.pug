@@ -21,3 +21,8 @@ block content
         div(class="col-3")
           button(type="submit", class="btn btn-primary mb-3", id="send") 发送
 
+      form(class="was-validated")
+        div(class="mb-3")
+          label(class="btn btn-primary" for="file") Send File
+          input(id="file", name="file", type="file", class="form-control", aria-label="file example", required="", hidden="hidden")
+

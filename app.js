@@ -3,6 +3,20 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+import multer from 'multer'
+const storage = multer.diskStorage({
+  // destination:'public/uploads/'+new Date().getFullYear() + (new Date().getMonth()+1) + new Date().getDate(),
+  destination(req,res,cb){
+    cb(null, __dirname + '/uploads/')
+  },
+  filename(req,file,cb){
+    const filenameArr = file.originalname.split('.')
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9)
+    cb(null,uniqueSuffix+ '.' + filenameArr[filenameArr.length-1])
+  }
+});
+
+const upload = multer({storage})
 import cors from './plugin/cors'
 import './plugin/mongodb'
 var indexRouter = require('./routes/index');
@@ -22,6 +36,9 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(cors)
 app.socket = initializeSocketIO;
 
+app.post('/file-upload', upload.single('file'), (req, res) => {
+  res.send(req.file)
+})
 app.use('/', indexRouter);
 app.use('/v1', v1)
 

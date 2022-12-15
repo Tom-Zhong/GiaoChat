@@ -30,9 +30,9 @@ div#messages {
 }
 
 .scroll-wrapper {
-  height: -moz-calc(100vh - 120px);
-  height: -webkit-calc(100vh - 120px);
-  height: calc(100vh - 120px);
+  height: -moz-calc(100vh - 200px);
+  height: -webkit-calc(100vh - 200px);
+  height: calc(100vh - 200px);
   position: relative;
   overflow: hidden;
   border: 1px solid #00f;
