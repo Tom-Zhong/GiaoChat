@@ -1,4 +1,4 @@
-requirejs(['io', 'jquery', 'axios', 'betterScroll'], function(io, $, axios, BtterScroll) {
+requirejs(['io', 'jquery', 'axios', 'betterScroll', 'recorder'], function(io, $, axios, BtterScroll, Recorder) {
   $(function() {
     var chatCom = io.connect('/chat_com')
     const roomName = decodeURI(
@@ -144,6 +144,47 @@ requirejs(['io', 'jquery', 'axios', 'betterScroll'], function(io, $, axios, Btte
           console.log(res);
         });
       })
+
+      let recorder = new Recorder({
+        type:"wav",   //此处的type类型是可修改的
+        bitRate:16,
+        sampleRate:16000,
+        bufferSize:8192,
+      })
+      if (navigator.mediaDevices.getUserMedia) {
+        const constraints = { audio: true };
+        navigator.mediaDevices.getUserMedia(constraints).then(
+            stream => {
+              // recording()
+              console.log("授权成功！");
+            },
+            () => {
+              console.error("授权失败！");
+            }
+        );
+      } else {
+        console.error("浏览器不支持 getUserMedia");
+      }
+
+      function recording () {
+        recorder.start()
+
+        setTimeout(() => {
+          recorder.stop();
+          recorder.play();
+          const wavBlob = recorder.getWAVBlob();
+          let formData = new FormData()
+          let file = wavBlob
+          console.log(file)
+          formData.append('file', file, Math.random() * 1e8 + '.wav')
+
+          const config = {};
+
+          axios.post("/file-upload", formData, config).then(res => {
+            console.log(res);
+          });
+        }, 5000)
+      }
     }
 
     chatCom.on('message', function(data) {
@@ -154,6 +195,17 @@ requirejs(['io', 'jquery', 'axios', 'betterScroll'], function(io, $, axios, Btte
         bs.scrollTo(0, bs.maxScrollY)
       }
     });
+
+    $('#play').click(function () {
+      function toggleSound() {
+        var music = document.getElementById("audioPlay")
+        if (music.paused) {
+          music.paused = false
+          music.play()
+        }
+      }
+      toggleSound()
+    })
 
     $('#send').click(function() {
       const token = localStorage.getItem('token')

@@ -1,6 +1,15 @@
 extends layout
 
 block content
+  script(src="https://cdn.jsdelivr.net/npm/emoji-mart@latest/dist/browser.js")
+  script.
+    const pickerOptions = {
+      onEmojiSelect: (obj) => { $('#message').append(obj.native)},
+      previewPosition: 'none',
+      searchPosition: 'none'
+    }
+    const picker = new EmojiMart.Picker(pickerOptions)
+    document.body.appendChild(picker)
   section#chatroom
     //div#messages
 
@@ -25,4 +34,7 @@ block content
         div(class="mb-3")
           label(class="btn btn-primary" for="file") Send File
           input(id="file", name="file", type="file", class="form-control", aria-label="file example", required="", hidden="hidden")
+      audio(id='audioPlay', src='/test/1671126880920-509850897.wav', autoplay)
+      button(class="btn btn-primary mb-3", id="play") 播放
+      button(class="btn btn-primary mb-3", id="record") 录音
 
